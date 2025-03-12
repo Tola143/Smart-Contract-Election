@@ -57,7 +57,7 @@ Before you begin, ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/election-smart-contract.git
+   git clone https://github.com/tola143/election-smart-contract.git
    cd election-smart-contract
    ```
 
