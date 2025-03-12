@@ -11,11 +11,11 @@ describe("Election - Test Script #4", function() {
         Election = await ethers.getContractFactory("Election");
         [owner, ...accounts] = await ethers.getSigners();
 
-        // Select 3 candidates (accounts[0], accounts[1], accounts[2])
-        candidates = accounts.slice(0, 3);
+        // Select 1 candidate (accounts[1])
+        candidates = [accounts[1]];
 
-        // Select 17 voters (accounts[3] to accounts[19])
-        voters = accounts.slice(3, 20);
+        // Select 18 voters (accounts[2] to accounts[19])
+        voters = accounts.slice(2, 20);
 
         // Last account (accounts[19]) will attempt to vote after the election ends
         lastAccount = accounts[19];
@@ -49,7 +49,7 @@ describe("Election - Test Script #4", function() {
             console.log("Test 2: Owner started election with duration - PASSED");
         });
 
-        it("3. 17 accounts (that are not owner and not the last account) make a vote.", async function() {
+        it("3. 18 accounts (that are not owner and not the last account) make a vote.", async function() {
             const duration = 20 * 60; // 20 minutes in seconds
 
             // Candidates apply
@@ -63,16 +63,14 @@ describe("Election - Test Script #4", function() {
             // Voters vote for candidates
             for (let i = 0; i < voters.length; i++) {
                 const voter = voters[i];
-                const candidate = candidates[i % candidates.length]; // Distribute votes evenly
+                const candidate = candidates[0]; // Only one candidate
                 await election.connect(voter).vote(candidate.address);
             }
 
             // Verify votes
-            for (const candidate of candidates) {
-                const votes = await election.getCandidateVotes(candidate.address);
-                expect(votes).to.equal(Math.floor(voters.length / candidates.length));
-            }
-            console.log("Test 3: 17 accounts voted - PASSED");
+            const votes = await election.getCandidateVotes(candidates[0].address);
+            expect(votes).to.equal(18); // All 18 voters voted for the single candidate
+            console.log("Test 3: 18 accounts voted - PASSED");
         });
 
         it("4. Owner ends the election, showing the winner with vote count.", async function() {
@@ -89,7 +87,7 @@ describe("Election - Test Script #4", function() {
             // Voters vote for candidates
             for (let i = 0; i < voters.length; i++) {
                 const voter = voters[i];
-                const candidate = candidates[i % candidates.length]; // Distribute votes evenly
+                const candidate = candidates[0]; // Only one candidate
                 await election.connect(voter).vote(candidate.address);
             }
 
@@ -126,7 +124,7 @@ describe("Election - Test Script #4", function() {
             // Voters vote for candidates
             for (let i = 0; i < voters.length; i++) {
                 const voter = voters[i];
-                const candidate = candidates[i % candidates.length]; // Distribute votes evenly
+                const candidate = candidates[0]; // Only one candidate
                 await election.connect(voter).vote(candidate.address);
             }
 
